@@ -6,10 +6,9 @@ public class User {
     private String password;
     private int id_permisos;
 
-    public User(int id, String n, String p, int permisos){
+    public User(int id, String n,int permisos){
         this.id_user = id;
         this.nombre = n;
-        this.password = p;
         this.id_permisos = permisos;
     }
 
@@ -19,10 +18,6 @@ public class User {
 
     public String getNombre() {
         return nombre;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getPermisos() {

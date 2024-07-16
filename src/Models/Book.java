@@ -1,11 +1,14 @@
 package Models;
 
+import java.util.ArrayList;
+
 public class Book {
     private int id_book;
     private String titulo;
     private String autor;
     private double price;
     private boolean status;
+    private ArrayList<String> categories;
 
     public Book(int id_book, String titulo, String autor, double price, boolean status) {
         this.id_book = id_book;
@@ -31,7 +34,16 @@ public class Book {
         return price;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
+
+    public void setCategories(ArrayList<String> categoryList){
+        this.categories = categoryList;
+    }
+
+    public ArrayList<String> getCategories(){
+        return this.categories;
+    }
+
 }

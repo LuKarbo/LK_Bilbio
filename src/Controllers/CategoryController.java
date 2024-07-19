@@ -29,7 +29,7 @@ public class CategoryController  extends Controller{
 
     // Get Category
     public <T> Category getCategory(String columna,T value){
-        String sql = "SELECT * FROM category WHERE" + columna + " = ?";
+        String sql = "SELECT * FROM category WHERE " + columna + " = ?";
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
             // Verifico que es lo que se va a buscar
             if (value instanceof String) {
@@ -102,12 +102,12 @@ public class CategoryController  extends Controller{
     }
 
     // Add Category a Book
-    public boolean setCategoriesForBook(ArrayList<Category> list, int bookId){
+    public boolean setCategoriesForBook(ArrayList<Integer> ids, int bookId){
         String sql = "INSERT INTO category_book (id_book, id_category) VALUES (?, ?)";
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
-            for (Category category : list) {
+            for (Integer categoryId : ids) {
                 stmt.setInt(1, bookId);
-                stmt.setInt(2, category.getId_category());
+                stmt.setInt(2, categoryId);
                 // los agrupo
                 stmt.addBatch();
             }

@@ -1,11 +1,7 @@
-Falta metodo para book_list (en BookController)
-Falta metodos en PrestamoController
+
 
 Falta en Views:
-- Home (tener botones para Ir a Usuarios, Libros, Prestamos + ver resumen de los prestamos más recientes)
-- Usuario (Ver lista de usuario + borones para Crear, Editar, Eliminar)
-- Vistas para  Crear, Editar, Eliminar [Usuario]
-- Prestamo (Ver lista de Prestamos Activos, otra de Finalizados + botnoes para Crear o Editar)
-- Vistas para Editar, Crear [Prestamo]
+botones de prestamo en el home
+consultas Delete fallo por constrain
 
 test

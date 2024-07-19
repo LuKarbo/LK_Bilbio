@@ -29,7 +29,7 @@ public class PermisosController  extends Controller{
 
     // Get Permiso por ID [PermisosController.getPermByID(id) -> devuelve permiso (Model: Permiso)]
     public <T> Permiso getPermiso(String columna,T value){
-        String sql = "SELECT * FROM permisos WHERE" + columna + " = ?";
+        String sql = "SELECT * FROM permisos WHERE " + columna + " = ?";
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
             // Verifico que es lo que se va a buscar
             if (value instanceof String) {

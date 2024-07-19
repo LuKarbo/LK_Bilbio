@@ -27,11 +27,22 @@ public class Login extends JFrame {
                 String pass = new String(userPasswordField.getPassword());
                 User userTemp = uc.loginAction(userNameField.getText().trim(),pass);
                 if(userTemp != null){
-                    // Accedo al Home
-                    alertSMGLabel.setVisible(false);
-                    setVisible(false);
-                    // Muestro el Home
-                    System.out.println("Accedio al Home");
+
+                    if(userTemp.getPermisos() == 2){
+                        // Accedo al Home
+                        alertSMGLabel.setVisible(false);
+                        setVisible(false);
+
+                        // Muestro el Home
+                        Home homeView = new Home(userTemp);
+                        homeView.setVisible(true);
+                        // System.out.println("Accedio al Home");
+                    }
+                    else{
+                        alertSMGLabel.setText("Acceso Denegado");
+                        alertSMGLabel.setVisible(true);
+                        setSize(300, 260);
+                    }
                 }
                 else{
                     alertSMGLabel.setText("Credenciales inválidas");

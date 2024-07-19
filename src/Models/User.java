@@ -1,5 +1,7 @@
 package Models;
 
+import Controllers.PermisosController;
+
 public class User {
     private int id_user;
     private String nombre;
@@ -20,8 +22,12 @@ public class User {
         return nombre;
     }
 
-    public String getPermisos() {
-        // PermisosController.getPermByID(id) -> devuelve el modelo Permiso -> con getNombre() tenemos el nombre
-        return "";
+    public int getPermisos() {
+        return this.id_permisos;
+    }
+
+    public String getPermisosString() {
+        PermisosController pc = new PermisosController();
+        return pc.getPermiso("id_permisos",this.id_permisos).getNombre();
     }
 }

@@ -1,12 +1,11 @@
 package Controllers;
 
 import Models.Book;
-import Models.Book;
-import Models.Category;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class BookController extends Controller{
@@ -32,7 +31,7 @@ public class BookController extends Controller{
 
     // Get Book
     public <T> ArrayList<Book> getBookWithList(String columna, T value) {
-        String sql = "SELECT * FROM category WHERE " + columna + " = ?";
+        String sql = "SELECT * FROM book WHERE " + columna + " = ?";
         ArrayList<Book> bookList = new ArrayList<>();
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
 
@@ -60,13 +59,26 @@ public class BookController extends Controller{
     }
 
     // Create Book
-    public boolean createBook(String title,String autor, double price) {
-        String sql = "INSERT INTO book (titulo,autor,price,status) VALUES (?,?,?,1)";
-        try (PreparedStatement stmt = db.prepareStatement(sql)) {
+    public boolean createBook(String title, String autor, double price, ArrayList<Integer> categorias) {
+        String sql = "INSERT INTO book (titulo, autor, price, status) VALUES (?, ?, ?, 1)";
+
+        try (PreparedStatement stmt = db.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, title);
             stmt.setString(2, autor);
             stmt.setDouble(3, price);
-            return stmt.executeUpdate() > 0;
+
+            // Ejecutar la consulta de inserción
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // Consigo el id que se genero
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int bookId = generatedKeys.getInt(1);
+                    CategoryController cc = new CategoryController();
+                    return cc.setCategoriesForBook(categorias, bookId);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,7 +87,7 @@ public class BookController extends Controller{
     }
 
     // Update Book
-    public boolean editBook(int id, String name,String title,String autor, double price) {
+    public boolean editBook(int id, String title, String autor, double price, boolean status) {
         ArrayList<Book> books = getBookWithList("id_book", id);
         if (books != null && !books.isEmpty()) {
             String sql = "UPDATE book SET titulo = ?,autor = ?,price = ? WHERE id_book = ?";
@@ -84,7 +96,9 @@ public class BookController extends Controller{
                 stmt.setString(2, autor);
                 stmt.setDouble(3, price);
                 stmt.setInt(4, id);
-                return stmt.executeUpdate() > 0;
+                if(stmt.executeUpdate() > 0){
+                    return editStatusBook(id,status);
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -95,7 +109,7 @@ public class BookController extends Controller{
     }
 
     // Update Status Book
-    public boolean editBook(int id, boolean status) {
+    public boolean editStatusBook(int id, boolean status) {
         ArrayList<Book> books = getBookWithList("id_book", id);
         if (books != null && !books.isEmpty()) {
             String sql = "UPDATE book SET status = ? WHERE id_book = ?";
@@ -113,13 +127,13 @@ public class BookController extends Controller{
     }
 
     // Delete Book
-    public boolean deleteCategory(int id) {
+    public boolean deleteBook(int id) {
         ArrayList<Book> books = getBookWithList("id_book", id);
         if (books != null && !books.isEmpty()) {
             for (Book book:books) {
                 // verifico que este disponible, ya que si esta en un prestamo o no disponible, no se debe de poder borrar
                 if(book.getId_book() == id && book.getStatus()){
-                    String sql = "DELETE FROM book WHERE id_book = ?";
+                    String sql = "DELETE FROM book WHERE id_book = ?"; // preparar para eliminar la foren cuando se elimina
                     try (PreparedStatement stmt = db.prepareStatement(sql)) {
                         stmt.setInt(1, id);
                         return stmt.executeUpdate() > 0;
@@ -134,8 +148,5 @@ public class BookController extends Controller{
         }
         return false;
     }
-
-    // Create a Book List
-
 
 }

@@ -16,7 +16,7 @@ public class DBConnection {
         if (db == null || db.isClosed()) {
             try {
                 db = DriverManager.getConnection(url, userName, userPass);
-                db.setAutoCommit(false);
+                db.setAutoCommit(true);
             } catch (SQLException e) {
                 throw new SQLException("Error al conectar a la base de datos", e);
             }

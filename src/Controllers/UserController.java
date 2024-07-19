@@ -38,16 +38,24 @@ public class UserController  extends Controller{
     }
 
     // Get user List
-    public ArrayList<User> getUserList(){
-        ArrayList<User> userList = new ArrayList<>();
-        String sql = "SELECT * FROM user";
+    public Object[][] getUserList() {
+        String sql = "SELECT u.id_user, u.nombre, " +
+                "(SELECT COUNT(*) FROM prestamo WHERE id_user = u.id_user AND status = 1) AS PrestamosActivos, " +
+                "(SELECT COUNT(*) FROM prestamo WHERE id_user = u.id_user) AS PrestamosTotales " +
+                "FROM user u";
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
+                ArrayList<Object[]> dataList = new ArrayList<>();
                 while (rs.next()) {
-                    User user = new User(rs.getInt("id_user"), rs.getString("nombre"), rs.getInt("id_permisos"));
-                    userList.add(user);
+                    Object[] row = {
+                            rs.getInt("id_user"),
+                            rs.getString("nombre"),
+                            rs.getInt("PrestamosActivos"),
+                            rs.getInt("PrestamosTotales")
+                    };
+                    dataList.add(row);
                 }
-                return userList;
+                return dataList.toArray(new Object[0][0]);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -152,6 +160,7 @@ public class UserController  extends Controller{
             for (byte b : hashedBytes) {
                 sb.append(String.format("%02x", b));
             }
+            System.out.println(sb.toString());
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             System.out.println(e.getMessage());

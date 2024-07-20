@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.Book;
+import Models.Prestamo;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -88,22 +89,29 @@ public class BookController extends Controller{
 
     // Update Book
     public boolean editBook(int id, String title, String autor, double price, boolean status) {
-        ArrayList<Book> books = getBookWithList("id_book", id);
-        if (books != null && !books.isEmpty()) {
-            String sql = "UPDATE book SET titulo = ?,autor = ?,price = ? WHERE id_book = ?";
-            try (PreparedStatement stmt = db.prepareStatement(sql)) {
-                stmt.setString(1, title);
-                stmt.setString(2, autor);
-                stmt.setDouble(3, price);
-                stmt.setInt(4, id);
-                if(stmt.executeUpdate() > 0){
-                    return editStatusBook(id,status);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }else {
+        PrestamoController pc = new PrestamoController();
+        Prestamo prestamo = pc.getPrestamo("id_book", id);
+        if( prestamo != null && prestamo.isStatus()){
             return false;
+        }
+        else{
+            ArrayList<Book> books = getBookWithList("id_book", id);
+            if (books != null && !books.isEmpty()) {
+                String sql = "UPDATE book SET titulo = ?,autor = ?,price = ? WHERE id_book = ?";
+                try (PreparedStatement stmt = db.prepareStatement(sql)) {
+                    stmt.setString(1, title);
+                    stmt.setString(2, autor);
+                    stmt.setDouble(3, price);
+                    stmt.setInt(4, id);
+                    if(stmt.executeUpdate() > 0){
+                        return editStatusBook(id,status);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                return false;
+            }
         }
         return false;
     }
@@ -115,7 +123,7 @@ public class BookController extends Controller{
             String sql = "UPDATE book SET status = ? WHERE id_book = ?";
             try (PreparedStatement stmt = db.prepareStatement(sql)) {
                 stmt.setBoolean(1, status);
-                stmt.setInt(4, id);
+                stmt.setInt(2, id);
                 return stmt.executeUpdate() > 0;
             } catch (SQLException e) {
                 e.printStackTrace();

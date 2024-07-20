@@ -1,6 +1,8 @@
 package Controllers;
 
 import Models.Book;
+import Models.Category;
+import Models.Prestamo;
 import Models.User;
 
 import java.sql.Date;
@@ -11,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class PrestamoController extends Controller{
+public class PrestamoController extends Controller {
     // Create Prestamo
-    public boolean createPrestamo(int idUser, int idBook){
+    public boolean createPrestamo(int idUser, int idBook) {
         String sql = "INSERT INTO prestamo (id_user, id_book, inicioDate, status) VALUES (?, ?, ?,1)";
         // Agrego data al sql
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
@@ -27,10 +29,10 @@ public class PrestamoController extends Controller{
             // mando el dato
             stmt.setDate(3, fechaActualSQL);
 
-            if(stmt.executeUpdate() > 0){
+            if (stmt.executeUpdate() > 0) {
                 // Actualizar el estado de los libros que se agregaron
                 BookController bc = new BookController();
-                if(bc.editStatusBook(idBook,false)){
+                if (bc.editStatusBook(idBook, false)) {
                     return true;
                 }
             }
@@ -51,16 +53,59 @@ public class PrestamoController extends Controller{
             stmt.setInt(2, id);
 
             int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                BookController bc = new BookController();
+                sql = "Select id_book From prestamo WHERE id_prestamo = ?";
+                try (PreparedStatement stmt2 = db.prepareStatement(sql)) {
+                    stmt2.setInt(1, id);
+                    ResultSet rs = stmt2.executeQuery();
+                    if (rs.next()) {
+                        return bc.editStatusBook(rs.getInt("id_book"), true);
+                    } else {
+                        return false;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
+        return false;
+    }
+
+
+
+    public <T> Prestamo getPrestamo(String columna, T value){
+        String sql = "SELECT * FROM prestamo WHERE " + columna + " = ?";
+        try (PreparedStatement stmt = db.prepareStatement(sql)) {
+            // Verifico que es lo que se va a buscar
+            if (value instanceof String) {
+                stmt.setString(1, (String) value);
+            } else if (value instanceof Integer) {
+                stmt.setInt(1, (Integer) value);
+            } else {
+                return null;
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Prestamo(rs.getInt("id_prestamo"),rs.getInt("id_user"),rs.getInt("id_book"),rs.getDate("inicioDate"),rs.getBoolean("status"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Historial (Todos los prestamos)
-    public Object[][] getPrestamosList() {
+    public Object[][] getPrestamosList(int option) {
         String sql = "SELECT * FROM prestamo";
+        if(option == 0){
+            sql += " WHERE status = 1";
+        }
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
                 ArrayList<Object[]> dataList = new ArrayList<>();
@@ -99,7 +144,7 @@ public class PrestamoController extends Controller{
         // Realizo la consulta, para obtener: Libro más solicitado, Días con más prestamos, Cliente con más Prestamos
         String sql = "SELECT " +
                 " (SELECT nombre FROM user WHERE id_user = id_user_max) AS nombre_usuario, " +
-                "  (SELECT nombre FROM book WHERE id_book = id_book_max) AS nombre_libro, " +
+                "  (SELECT titulo FROM book WHERE id_book = id_book_max) AS nombre_libro, " +
                 " fecha_prestamos" +
                 " FROM ( SELECT id_user AS id_user_max,  id_book AS id_book_max, inicioDate AS fecha_prestamos" +
                 " FROM prestamo" +

@@ -32,6 +32,7 @@ public class Create extends JFrame{
                 else{
                     smgAlert.setText("Nombre en uso");
                     smgAlert.setVisible(true);
+                    pack();
                 }
             }
         });

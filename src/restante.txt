@@ -1,7 +1,5 @@
+Falta:
+- Test
 
-
-Falta en Views:
-botones de prestamo en el home
-consultas Delete fallo por constrain
-
-test
+- Agregar filtrados para la tabla prestamo
+- Agregar un BTN para book para buscar por Nombre, autor, etc (que sea segun lo que el usuario ingrese)

@@ -66,6 +66,7 @@ public class Create extends JFrame {
                 } else {
                     smgAlert.setText("Error al crear el libro");
                     smgAlert.setVisible(true);
+                    pack();
                 }
             }
         });

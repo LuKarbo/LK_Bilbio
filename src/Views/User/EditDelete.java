@@ -87,6 +87,7 @@ public class EditDelete extends JFrame{
                 else{
                     smgAlert.setText("Nombre en uso");
                     smgAlert.setVisible(true);
+                    pack();
                 }
             }
         });
@@ -103,6 +104,7 @@ public class EditDelete extends JFrame{
                 else{
                     smgAlert.setText("Error al Eliminar");
                     smgAlert.setVisible(true);
+                    pack();
                 }
             }
         });

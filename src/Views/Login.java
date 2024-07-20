@@ -41,13 +41,13 @@ public class Login extends JFrame {
                     else{
                         alertSMGLabel.setText("Acceso Denegado");
                         alertSMGLabel.setVisible(true);
-                        setSize(300, 260);
+                        setSize(300, 270);
                     }
                 }
                 else{
                     alertSMGLabel.setText("Credenciales inválidas");
                     alertSMGLabel.setVisible(true);
-                    setSize(300, 260);
+                    setSize(300, 270);
                 }
             }
         });

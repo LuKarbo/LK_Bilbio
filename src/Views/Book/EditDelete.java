@@ -125,6 +125,7 @@ public class EditDelete extends JFrame{
                         categoryPanel.add(checkBox);
                     }
                 }
+                pack();
             }
         });
 
@@ -142,11 +143,13 @@ public class EditDelete extends JFrame{
                     else{
                         smgAlert.setText("Error al editar el Libro");
                         smgAlert.setVisible(true);
+                        pack();
                     }
                 }
                 else{
                     smgAlert.setText("Seleccione un Libro");
                     smgAlert.setVisible(true);
+                    pack();
                 }
             }
         });

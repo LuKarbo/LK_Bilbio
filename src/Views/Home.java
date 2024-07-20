@@ -8,6 +8,8 @@ import Interface.IActualizar;
 import Models.Book;
 import Models.Category;
 import Models.User;
+import Views.Prestamo.Historial;
+import Views.Prestamo.Registro;
 import Views.User.Create;
 import Views.User.EditDelete;
 
@@ -87,6 +89,38 @@ public class Home extends JFrame implements IActualizar {
         });
         // ---------------------------- BOOK END ------------------------------
 
+        // ---------------------------- Prestamo START ----------------------------
+        historialButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Historial historial = new Historial();
+                historial.setVisible(true);
+            }
+        });
+        reporteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Registro registro = new Registro();
+                registro.setVisible(true);
+            }
+        });
+        crearPrestamoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Views.Prestamo.Create createPrestamo = new Views.Prestamo.Create(Home.this);
+                createPrestamo.setVisible(true);
+            }
+        });
+        editarPrestamoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Views.Prestamo.Edit editPrestamo = new Views.Prestamo.Edit(Home.this);
+                editPrestamo.setVisible(true);
+            }
+        });
+
+        // ---------------------------- Prestamo END ----------------------------
+
         setTitle("LK-Biblio Home");
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,7 +131,7 @@ public class Home extends JFrame implements IActualizar {
         String[] columnNames2 = {"ID", "Cliente", "Libro", "Fecha", "Estado"};
 
         PrestamoController pc = new PrestamoController();
-        Object[][] data = pc.getPrestamosList();
+        Object[][] data = pc.getPrestamosList(0);
 
         if (data == null) {
             data = new Object[0][columnNames2.length];

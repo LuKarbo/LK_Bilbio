@@ -79,25 +79,13 @@ public class PrestamoController extends Controller {
 
 
     public <T> Prestamo getPrestamo(String columna, T value){
-        String sql = "SELECT * FROM prestamo WHERE " + columna + " = ?";
-        try (PreparedStatement stmt = db.prepareStatement(sql)) {
-            // Verifico que es lo que se va a buscar
-            if (value instanceof String) {
-                stmt.setString(1, (String) value);
-            } else if (value instanceof Integer) {
-                stmt.setInt(1, (Integer) value);
-            } else {
-                return null;
+        return getInfo("prestamo", columna, value, rs -> {  // buscar más sobre "Expresión Lambda"
+            try {
+                return new Prestamo(rs.getInt("id_prestamo"), rs.getInt("id_user"), rs.getInt("id_book"), rs.getDate("inicioDate"), rs.getBoolean("status"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Prestamo(rs.getInt("id_prestamo"),rs.getInt("id_user"),rs.getInt("id_book"),rs.getDate("inicioDate"),rs.getBoolean("status"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        });
     }
 
     // Historial (Todos los prestamos)

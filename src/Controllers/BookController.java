@@ -2,11 +2,9 @@ package Controllers;
 
 import Models.Book;
 import Models.Prestamo;
+import Models.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class BookController extends Controller{
@@ -30,16 +28,20 @@ public class BookController extends Controller{
         return null;
     }
 
-    // Get Book
+    // Get Book por columna y valor
     public <T> ArrayList<Book> getBookWithList(String columna, T value) {
-        String sql = "SELECT * FROM book WHERE " + columna + " = ?";
+        String sql = "SELECT * FROM book WHERE " + columna + " = ? OR " + columna + " LIKE ?";
         ArrayList<Book> bookList = new ArrayList<>();
         try (PreparedStatement stmt = db.prepareStatement(sql)) {
 
             if (value instanceof String) {
                 stmt.setString(1, (String) value);
+                stmt.setString(2, "%" + value + "%");
+                System.out.println(sql);
             } else if (value instanceof Integer) {
                 stmt.setInt(1, (Integer) value);
+                stmt.setInt(2, (Integer) value);
+                System.out.println(sql);
             } else {
                 return null;
             }
@@ -61,6 +63,7 @@ public class BookController extends Controller{
 
     // Create Book
     public boolean createBook(String title, String autor, double price, ArrayList<Integer> categorias) {
+
         String sql = "INSERT INTO book (titulo, autor, price, status) VALUES (?, ?, ?, 1)";
 
         try (PreparedStatement stmt = db.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

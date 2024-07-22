@@ -8,6 +8,7 @@ import Interface.IActualizar;
 import Models.Book;
 import Models.Category;
 import Models.User;
+import Views.Book.Get;
 import Views.Prestamo.Historial;
 import Views.Prestamo.Registro;
 import Views.User.Create;
@@ -40,6 +41,7 @@ public class Home extends JFrame implements IActualizar {
     private JButton createBookBTN;
     private JScrollPane dataPresPanel;
     private JScrollPane dataBookPanel;
+    private JButton getSpecificBook;
 
     public Home(User user){
         userNameLabel.setText("Usuario: " + user.getNombre().trim());
@@ -85,6 +87,14 @@ public class Home extends JFrame implements IActualizar {
             public void actionPerformed(ActionEvent e) {
                 Views.Book.EditDelete bookEditDelete = new Views.Book.EditDelete(Home.this);
                 bookEditDelete.setVisible(true);
+            }
+        });
+
+        getSpecificBook.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Get buscador = new Get();
+                buscador.setVisible(true);
             }
         });
         // ---------------------------- BOOK END ------------------------------
@@ -192,9 +202,6 @@ public class Home extends JFrame implements IActualizar {
         booksTable.revalidate();
         booksTable.repaint();
     }
-
-
-
 
     @Override
     public void actualizar() {

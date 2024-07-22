@@ -27,27 +27,15 @@ public class PermisosController  extends Controller{
         return null;
     }
 
-    // Get Permiso por ID [PermisosController.getPermByID(id) -> devuelve permiso (Model: Permiso)]
+    // Get Permiso
     public <T> Permiso getPermiso(String columna,T value){
-        String sql = "SELECT * FROM permisos WHERE " + columna + " = ?";
-        try (PreparedStatement stmt = db.prepareStatement(sql)) {
-            // Verifico que es lo que se va a buscar
-            if (value instanceof String) {
-                stmt.setString(1, (String) value);
-            } else if (value instanceof Integer) {
-                stmt.setInt(1, (Integer) value);
-            } else {
-                return null;
+        return getInfo("permisos", columna, value, rs -> {  // buscar más sobre "Expresión Lambda"
+            try {
+                return new Permiso(rs.getInt("id_permisos"), rs.getString("nombre"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Permiso(rs.getInt("id_permisos"),rs.getString("nombre"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        });
     }
 
     // Create Permiso

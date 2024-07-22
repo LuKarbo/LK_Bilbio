@@ -65,25 +65,13 @@ public class UserController  extends Controller{
 
     // Get User By X
     public <T> User getUser(String columna,T value) {
-        String sql = "SELECT * FROM user WHERE " + columna + " = ?";
-        try (PreparedStatement stmt = db.prepareStatement(sql)) {
-            // Verifico que es lo que se va a buscar
-            if (value instanceof String) {
-                stmt.setString(1, (String) value);
-            } else if (value instanceof Integer) {
-                stmt.setInt(1, (Integer) value);
-            } else {
-                return null;
+        return getInfo("user", columna, value, rs -> { // buscar más sobre "Expresión Lambda"
+            try {
+                return new User(rs.getInt("id_user"), rs.getString("nombre"), rs.getInt("id_permisos"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new User(rs.getInt("id_user"),rs.getString("nombre"),rs.getInt("id_permisos"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        });
     }
 
     // Create User

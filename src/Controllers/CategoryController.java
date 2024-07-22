@@ -29,25 +29,13 @@ public class CategoryController  extends Controller{
 
     // Get Category
     public <T> Category getCategory(String columna,T value){
-        String sql = "SELECT * FROM category WHERE " + columna + " = ?";
-        try (PreparedStatement stmt = db.prepareStatement(sql)) {
-            // Verifico que es lo que se va a buscar
-            if (value instanceof String) {
-                stmt.setString(1, (String) value);
-            } else if (value instanceof Integer) {
-                stmt.setInt(1, (Integer) value);
-            } else {
-                return null;
+        return getInfo("category", columna, value, rs -> { // buscar más sobre "Expresión Lambda"
+            try {
+                return new Category(rs.getInt("id_category"), rs.getString("nombre"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Category(rs.getInt("id_category"),rs.getString("nombre"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        });
     }
 
     // Create Category

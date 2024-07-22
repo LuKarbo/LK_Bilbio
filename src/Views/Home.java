@@ -3,6 +3,9 @@ package Views;
 import Controllers.BookController;
 import Controllers.PermisosController;
 import Controllers.PrestamoController;
+import Controllers.Tables.GenerarBookTable;
+import Controllers.Tables.GenerarPrestamoTable;
+import Controllers.Tables.GenerarUserTable;
 import Controllers.UserController;
 import Interface.IActualizar;
 import Models.Book;
@@ -48,12 +51,16 @@ public class Home extends JFrame implements IActualizar {
         PermisosController pc = new PermisosController();
         permisosLabel.setText("Rol: " + pc.getPermiso("id_permisos",user.getPermisos()).getNombre().trim());
 
-        generatePrestamoTable();
-        generateUserTable();
-        generateBookTable();
+        // ---------------------------- TABLAS START ----------------------------
+        GenerarPrestamoTable generarPrestamoTable = new GenerarPrestamoTable(prestamosTable);
+        generarPrestamoTable.generarTabla();
+        GenerarUserTable generarUserTable = new GenerarUserTable(userTable);
+        generarUserTable.generarTabla();
+        GenerarBookTable generarBookTable = new GenerarBookTable(booksTable);
+        generarBookTable.generarTabla();
+        // ---------------------------- TABLAS END ----------------------------
 
         // ---------------------------- USER START ----------------------------
-        // Crear usuario
         crearUsuarioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -61,8 +68,6 @@ public class Home extends JFrame implements IActualizar {
                 createUser.setVisible(true);
             }
         });
-
-        // Editar usuario
         editarEliminarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,7 +86,6 @@ public class Home extends JFrame implements IActualizar {
                 bookCreate.setVisible(true);
             }
         });
-
         editDeleteBookBTN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,7 +93,6 @@ public class Home extends JFrame implements IActualizar {
                 bookEditDelete.setVisible(true);
             }
         });
-
         getSpecificBook.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -205,9 +208,14 @@ public class Home extends JFrame implements IActualizar {
 
     @Override
     public void actualizar() {
-        generatePrestamoTable();
-        generateUserTable();
-        generateBookTable();
+        GenerarPrestamoTable generarPrestamoTable = new GenerarPrestamoTable(prestamosTable);
+        generarPrestamoTable.generarTabla();
+
+        GenerarUserTable generarUserTable = new GenerarUserTable(userTable);
+        generarUserTable.generarTabla();
+
+        GenerarBookTable generarBookTable = new GenerarBookTable(booksTable);
+        generarBookTable.generarTabla();
 
         setTitle("LK-Biblio Home");
         setContentPane(mainPanel);

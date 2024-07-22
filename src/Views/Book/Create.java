@@ -2,6 +2,7 @@ package Views.Book;
 
 import Controllers.BookController;
 import Controllers.CategoryController;
+import Exceptions.PriceLimitExceededException;
 import Models.Category;
 import Views.Home;
 
@@ -59,12 +60,27 @@ public class Create extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 BookController bc = new BookController();
-                if (bc.createBook(tituloField.getText().trim(), autorField.getText().trim(),
-                        Double.parseDouble(precioField.getText().trim().replace(',', '.')), selectedCategoryIds)) {
-                    setVisible(false);
-                    home.actualizar();
-                } else {
-                    smgAlert.setText("Error al crear el libro");
+                try {
+                    if (bc.createBook(tituloField.getText().trim(), autorField.getText().trim(),
+                            Double.parseDouble(precioField.getText().trim().replace(',', '.')), selectedCategoryIds)) {
+                        setVisible(false);
+                        home.actualizar();
+                    } else {
+                        smgAlert.setText("Error al crear el libro");
+                        smgAlert.setVisible(true);
+                        pack();
+                    }
+                } catch (NumberFormatException ex) {
+                    smgAlert.setText("Ingrese un precio válido");
+                    smgAlert.setVisible(true);
+                    pack();
+                } catch (PriceLimitExceededException ex) {
+                    smgAlert.setText("El precio no puede ser mayor a 999,99");
+                    smgAlert.setVisible(true);
+                    pack();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    smgAlert.setText("Error: " + ex.getMessage());
                     smgAlert.setVisible(true);
                     pack();
                 }

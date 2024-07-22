@@ -1,9 +1,12 @@
 package Controllers;
 
+import Exceptions.PriceLimitExceededException;
 import Models.Book;
 import Models.Prestamo;
 import Models.User;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -62,7 +65,11 @@ public class BookController extends Controller{
     }
 
     // Create Book
-    public boolean createBook(String title, String autor, double price, ArrayList<Integer> categorias) {
+    public boolean createBook(String title, String autor, double price, ArrayList<Integer> categorias) throws PriceLimitExceededException {
+
+        if (price > 999.99) {
+            throw new PriceLimitExceededException("El precio supera el límite de 999,99");
+        }
 
         String sql = "INSERT INTO book (titulo, autor, price, status) VALUES (?, ?, ?, 1)";
 
@@ -71,11 +78,9 @@ public class BookController extends Controller{
             stmt.setString(2, autor);
             stmt.setDouble(3, price);
 
-            // Ejecutar la consulta de inserción
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                // Consigo el id que se genero
                 ResultSet generatedKeys = stmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     int bookId = generatedKeys.getInt(1);
@@ -89,6 +94,8 @@ public class BookController extends Controller{
 
         return false;
     }
+
+
 
     // Update Book
     public boolean editBook(int id, String title, String autor, double price, boolean status) {

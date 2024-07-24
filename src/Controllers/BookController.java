@@ -30,7 +30,6 @@ public class BookController extends Controller{
         }
         return null;
     }
-
     // Get Book por columna y valor
     public <T> ArrayList<Book> getBookWithList(String columna, T value) {
         String sql = "SELECT * FROM book WHERE " + columna + " = ? OR " + columna + " LIKE ?";
@@ -63,7 +62,6 @@ public class BookController extends Controller{
         }
         return null;
     }
-
     // Create Book
     public boolean createBook(String title, String autor, double price, ArrayList<Integer> categorias) throws PriceLimitExceededException {
 
@@ -94,8 +92,6 @@ public class BookController extends Controller{
 
         return false;
     }
-
-
 
     // Update Book
     public boolean editBook(int id, String title, String autor, double price, boolean status) {

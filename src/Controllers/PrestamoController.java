@@ -44,7 +44,6 @@ public class PrestamoController extends Controller {
         return false;
     }
 
-
     // Update PrestamoStatus
     public boolean editPrestamoStatus(int id, boolean newStatus) {
         String sql = "UPDATE prestamo SET status = ? WHERE id_prestamo = ?";
@@ -75,8 +74,6 @@ public class PrestamoController extends Controller {
         }
         return false;
     }
-
-
 
     public <T> Prestamo getPrestamo(String columna, T value){
         return getInfo("prestamo", columna, value, rs -> {  // buscar más sobre "Expresión Lambda"

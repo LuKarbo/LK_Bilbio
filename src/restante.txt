@@ -1,4 +1,0 @@
-Falta:
-- Test
-
-- Agregar filtrados para la tabla prestamo (Activos y No Activos)

@@ -1,0 +1,9 @@
+Hola, dejo 2 usuarios de prueba:
+
+Admin/Bibliotecario: (rol bibliotecario [puede acceder])
+- Usuario: lucas
+- Pass:  123
+
+Cliente: (rol cliente [Acceso Denegado])
+- Usuario: cliente
+- Pass: 123

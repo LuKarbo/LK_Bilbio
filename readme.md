@@ -26,7 +26,6 @@ El proyecto está estructurado en las siguientes partes:
 - `Interfaces/`: Contiene el archivo IActualizar, que solo tiene la funcion que se utiliza en algunas vitas para "actualizar" la info
 - `Models/`: Archivos que simulan los modelos de la BBDD
 - `SQL/`: Archivo que contiene el .sql para crear la BBDD
-- `Test/`: Contiene archivo Test para el testeo unitario de funcionalidades
 - `Views/`: Todas las vistas gráficas con sus codigos y .form
 
 ### Autores
